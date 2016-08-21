@@ -31,7 +31,7 @@ function updateGraph(e)
   {
     title: "Internet Downtime",
     hAxis: {title: "Date"},
-    vAxis: {title: "Downtime (mins)"},
+    vAxis: {title: "Downtime (mins)", minValue: 0},
     pointSize: 5,
     tooltip: {isHtml: true},
     backgroundColor: "#EEE",

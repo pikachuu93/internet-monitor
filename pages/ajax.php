@@ -22,11 +22,12 @@ class Ajax extends Frame
       list($y, $m, $d) = explode("-", $start);
       $d++;
 
-      $res = $db->select(["value",
+      $res = $db->select(["sum(value)",
                           "datetime",
-                          "strftime('%Y-%m-%d-%H-%M-%S', datetime, 'unixepoch') as date"])
+                          "strftime('%Y-%m-%d-%H-00-00', datetime, 'unixepoch') as date"])
                 ->from("connected")
                 ->where("date >= '$start' AND date < '$y-$m-$d'")
+                ->groupBy("date")
                 ->orderBy("datetime ASC")
                 ->run();
 
@@ -47,11 +48,11 @@ class Ajax extends Frame
     }
     else
     {
-      $res = $db->select(["count(value)",
+      $res = $db->select(["sum(value)",
                           "datetime",
                           "date(datetime, 'unixepoch') as date"])
                 ->from("connected")
-                ->where("value = 0 AND date >= '$start' AND date <= '$end'")
+                ->where("date >= '$start' AND date <= '$end'")
                 ->groupBy("date")
                 ->orderBy("datetime ASC")
                 ->run();
