@@ -12,7 +12,7 @@ class SpeedTest extends Frame
     }
   }
 
-  public function display()
+  public function load()
   {
     global $db;
 

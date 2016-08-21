@@ -9,10 +9,7 @@ class History extends Frame
   {
     Page::addHead("<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>");
     Page::addHead("<script type='text/javascript' src='js/graph.js'></script>");
-  }
 
-  public function display()
-  {
     global $db;
 
     $div = "<div>" . new DateRangePicker()
