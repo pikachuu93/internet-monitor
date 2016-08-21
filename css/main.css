@@ -95,3 +95,13 @@ input
 {
   margin-left: 2px;
 }
+
+pre
+{
+  border: 1px solid black;
+  background: #FFF;
+  margin: 20px 5%;
+  padding: 20px 5%;
+  width: 80%;
+  font-family: Consolas, monaco, monospace;
+}
