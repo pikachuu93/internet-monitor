@@ -34,6 +34,7 @@ function updateGraph(e)
     vAxis: {title: "Downtime (mins)"},
     pointSize: 5,
     tooltip: {isHtml: true},
+    backgroundColor: "#EEE",
     //trendlines: {
     //  0: {
     //    type: 'linear',

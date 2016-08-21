@@ -2,8 +2,13 @@
 
 class Page
 {
-  static $head = [];
-  static $body = [];
+  static $url;
+  static $db;
+
+  static $head    = [];
+  static $body    = [];
+  static $pages   = [];
+  static $current = Null;
 
   public static function addHead($str)
   {
@@ -24,36 +29,83 @@ class Page
   {
     return "<head>"
          . implode("\n", self::$head)
+         . "<title>" . self::$current->getName() . "</title>"
          . "</head>";
   }
 
   public static function outputBody()
   {
     return "<body>"
+         . self::outputMenu()
          . implode("\n", self::$body)
          . "</body>";
   }
 
-  public function __construct($url, $db)
+  public static function outputMenu()
   {
-    $this->url = $url;
-    $this->db  = $db;
+    $html = "<div id='top-bar'><div class='";
+    $html .= "status-marker' style='background:";
 
-    $page = Settings::$root . "pages/" . $this->url[0] . ".php";
+    $data = getConnectionStatus();
 
-    if (file_exists($page))
+    if ($data[0])
     {
-      include($page);
+      $html .= "green";
     }
     else
     {
-      include(Settings::$root . "pages/graph.php");
+      $html .= "red";
+    }
+
+    $html .= ";'></div><nav><ul>";
+
+    foreach (self::$pages as $p)
+    {
+      if ($p->hasMenuItem())
+      {
+        $html .= "<li><a href='" . $p->getUrl()
+               . "'>" . $p->getName() . "</a></li>";
+      }
+    }
+
+    $html .= "</ul></nav></div>";
+
+    $html .= self::$current->display();
+
+    return $html;
+  }
+
+  public function __construct($url, $db)
+  {
+    self::$url = $url;
+    self::$db  = $db;
+
+    foreach (scandir(Settings::$root . "pages") as $f)
+    {
+      if ($f[0] === ".")
+      {
+        continue;
+      }
+
+      $p = include(Settings::$root . "pages/" . $f);
+
+      if ($p instanceof Frame)
+      {
+        self::$pages[] = $p;
+
+        if ($p->getUrl() === self::$url[0])
+        {
+          self::$current = $p;
+        }
+      }
     }
   }
 
   public function __toString()
   {
-    return "<html>"
+    self::defaultStyles();
+
+    return "<!DOCTYPE html><html>"
          . self::outputHead()
          . self::outputBody()
          . "</html>";
