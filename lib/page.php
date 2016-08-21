@@ -63,8 +63,14 @@ class Page
     {
       if ($p->hasMenuItem())
       {
-        $html .= "<li><a href='" . $p->getUrl()
-               . "'>" . $p->getName() . "</a></li>";
+        $html .= "<li><a href='" . $p->getUrl();
+
+        if ($p === self::$current)
+        {
+          $html .= "' class='selected";
+        }
+
+        $html .= "'>" . $p->getName() . "</a></li>";
       }
     }
 
@@ -96,6 +102,7 @@ class Page
         if ($p->getUrl() === self::$url[0])
         {
           self::$current = $p;
+          $p->load();
         }
       }
     }

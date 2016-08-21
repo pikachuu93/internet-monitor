@@ -5,13 +5,10 @@ class History extends Frame
   protected $name = "History";
   protected $url  = "history";
 
-  function __construct()
+  function load()
   {
-    if (Page::$url[0] === $this->url)
-    {
-      Page::addHead("<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>");
-      Page::addHead("<script type='text/javascript' src='js/graph.js'></script>");
-    }
+    Page::addHead("<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>");
+    Page::addHead("<script type='text/javascript' src='js/graph.js'></script>");
   }
 
   public function display()
