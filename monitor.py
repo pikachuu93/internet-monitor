@@ -12,15 +12,30 @@ class Monitor():
     self.path    = "/home/pi/"
     self.dbName  = "connectivity.sqlite"
 
+    self.parseArgs(args)
+
     self.now = datetime.datetime.now()
 
     self.connection = sqlite3.connect(self.path + self.dbName)
 
-    self.parseArgs(args)
+    self.setupDatabase()
 
     self.sleep()
 
     self.run()
+
+  def setupDatabase(self):
+    c = self.connection.cursor()
+
+    c.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='connected';")
+
+    exists = c.fetchone()[0]
+    if not exists:
+      print("Creating table")
+      c.execute("CREATE TABLE connected (datetime INTEGER PRIMARY KEY, value INTEGER);")
+
+    self.connection.commit()
+    
 
   def run(self):
     while True:
