@@ -63,16 +63,26 @@ class Page
     {
       if ($p->hasMenuItem())
       {
-        $html .= "<li><a href='" . $p->getUrl()
-               . "'>" . $p->getName() . "</a></li>";
+        $html .= "<li><a href='" . $p->getUrl();
+
+        if ($p === self::$current)
+        {
+          $html .= "' class='selected";
+        }
+
+        $html .= "'>" . $p->getName() . "</a></li>";
       }
     }
 
     $html .= "</ul></nav></div>";
 
-    $html .= self::$current->display();
-
     return $html;
+  }
+
+  public function loadDefault()
+  {
+    # This is super buggy!!!
+    self::$current = self::$pages[1];
   }
 
   public function __construct($url, $db)
@@ -99,6 +109,13 @@ class Page
         }
       }
     }
+
+    if (self::$current === Null)
+    {
+      self::loadDefault();
+    }
+
+    self::$current->load();
   }
 
   public function __toString()

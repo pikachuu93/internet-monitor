@@ -5,7 +5,7 @@ class Ajax extends Frame
   protected $url      = "ajax";
   protected $menuItem = false;
 
-  function display()
+  function load()
   {
     global $db;
 

@@ -51,11 +51,25 @@ body
   border: 1px solid black;
   border-bottom: none;
   border-radius: 5px 5px 0 0;
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+}
+
+#top-bar li a.selected
+{
+  background: #EEE;
+  border-bottom: 1px solid #EEE;
 }
 
 #top-bar li a:hover
 {
   background: #BBB;
+}
+
+#top-bar li a.selected:hover
+{
+  background: #EEE;
 }
 
 .status-marker

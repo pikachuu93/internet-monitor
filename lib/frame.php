@@ -20,6 +20,10 @@ class Frame
   {
     return $this->url;
   }
+
+  public function load()
+  {
+  }
 }
 
 ?>
