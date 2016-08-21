@@ -17,33 +17,64 @@ class Ajax extends Frame
     $start = $_POST["start"];
     $end   = $_POST["end"];
 
-    $res = $db->select(["count(value)",
-                        "datetime",
-                        "date(datetime, 'unixepoch') as date"])
-              ->from("connected")
-              ->where("value = 0 AND date >= '$start' AND date <= '$end'")
-              ->groupBy("date")
-              ->orderBy("datetime ASC")
-              ->run();
-
-    echo '[[{"type":"date","label":"Date"},{"type":"number","label":"Value"}]';
-
-    if ($r = $res->fetchArray())
+    if ($start === $end)
     {
-      echo ",";
+      list($y, $m, $d) = explode("-", $start);
+      $d++;
 
-      do
+      $res = $db->select(["value",
+                          "datetime",
+                          "strftime('%Y-%m-%d-%H-%M-%S', datetime, 'unixepoch') as date"])
+                ->from("connected")
+                ->where("date >= '$start' AND date < '$y-$m-$d'")
+                ->orderBy("datetime ASC")
+                ->run();
+
+      echo '[[{"type":"datetime","label":"Date"},{"type":"number","label":"Value"}]';
+
+
+      while ($r = $res->fetchArray())
       {
-        list($y, $m, $d) = split("-", $r[2]);
+        echo ",";
+        list($y, $m, $d, $h, $M, $s) = split("-", $r[2]);
 
         $m--;
 
-        echo "[\"Date($y, $m, $d)\"," . $r[0] . "]";
+        echo "[\"Date($y,$m,$d,$h,$M,$s)\"," . $r[0] . "]";
       }
-      while (($r = $res->fetchArray()) && print(","));
-    }
 
-    echo "]";
+      echo "]";
+    }
+    else
+    {
+      $res = $db->select(["count(value)",
+                          "datetime",
+                          "date(datetime, 'unixepoch') as date"])
+                ->from("connected")
+                ->where("value = 0 AND date >= '$start' AND date <= '$end'")
+                ->groupBy("date")
+                ->orderBy("datetime ASC")
+                ->run();
+
+      echo '[[{"type":"date","label":"Date"},{"type":"number","label":"Value"}]';
+
+      if ($r = $res->fetchArray())
+      {
+        echo ",";
+
+        do
+        {
+          list($y, $m, $d) = split("-", $r[2]);
+
+          $m--;
+
+          echo "[\"Date($y, $m, $d)\"," . $r[0] . "]";
+        }
+        while (($r = $res->fetchArray()) && print(","));
+      }
+
+      echo "]";
+    }
 
     die();
   }
