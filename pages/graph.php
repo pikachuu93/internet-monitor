@@ -1,13 +1,23 @@
 <?php
 
-global $db;
-  
-Page::addHead("<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>");
-Page::defaultStyles();
-Page::addBody(new StatusRibon());
+class History extends Frame
+{
+  protected $name = "History";
+  protected $url  = "history";
 
-$div = "<div>" . new DateRangePicker() . "<div id='graph-container'></div></div>";
+  public function display()
+  {
+    global $db;
+      
+    Page::addHead("<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>");
+    Page::defaultStyles();
 
-Page::addBody($div);
+    $div = "<div>" . new DateRangePicker() . "<div id='graph-container'></div></div>";
+
+    Page::addBody($div);
+  }
+}
+
+return new History;
 
 ?>

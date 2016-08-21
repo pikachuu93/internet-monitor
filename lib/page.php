@@ -2,8 +2,9 @@
 
 class Page
 {
-  static $head = [];
-  static $body = [];
+  static $head  = [];
+  static $body  = [];
+  static $pages = [];
 
   public static function addHead($str)
   {
@@ -30,8 +31,41 @@ class Page
   public static function outputBody()
   {
     return "<body>"
+         . self::outputMenu()
          . implode("\n", self::$body)
          . "</body>";
+  }
+
+  public static function outputMenu()
+  {
+    $html = "<div id='top-bar'><div class='";
+    $html .= "status-marker' style='background:";
+
+    $data = getConnectionStatus();
+
+    if ($data[0])
+    {
+      $html .= "green";
+    }
+    else
+    {
+      $html .= "red";
+    }
+
+    $html .= ";'></div><nav><ul>";
+
+    foreach (self::$pages as $p)
+    {
+      if ($p->hasMenuItem())
+      {
+        $html .= "<li><a href='" . $p->getUrl()
+               . "'>" . $p->getName() . "</a></li>";
+      }
+    }
+
+    $html .= "</ul></nav>";
+
+    return $html;
   }
 
   public function __construct($url, $db)
@@ -39,21 +73,27 @@ class Page
     $this->url = $url;
     $this->db  = $db;
 
-    $page = Settings::$root . "pages/" . $this->url[0] . ".php";
+    foreach (scandir(Settings::$root . "pages") as $f)
+    {
+      if ($f[0] === ".")
+      {
+        continue;
+      }
 
-    if (file_exists($page))
-    {
-      include($page);
-    }
-    else
-    {
-      include(Settings::$root . "pages/graph.php");
+      $p = include(Settings::$root . "pages/" . $f);
+
+      if ($p instanceof Frame)
+      {
+        self::$pages[] = $p;
+      }
     }
   }
 
   public function __toString()
   {
-    return "<html>"
+    self::defaultStyles();
+
+    return "<!DOCTYPE html><html>"
          . self::outputHead()
          . self::outputBody()
          . "</html>";
