@@ -2,9 +2,13 @@
 
 class Page
 {
-  static $head  = [];
-  static $body  = [];
-  static $pages = [];
+  static $url;
+  static $db;
+
+  static $head    = [];
+  static $body    = [];
+  static $pages   = [];
+  static $current = Null;
 
   public static function addHead($str)
   {
@@ -25,6 +29,7 @@ class Page
   {
     return "<head>"
          . implode("\n", self::$head)
+         . "<title>" . self::$current->getName() . "</title>"
          . "</head>";
   }
 
@@ -63,15 +68,17 @@ class Page
       }
     }
 
-    $html .= "</ul></nav>";
+    $html .= "</ul></nav></div>";
+
+    $html .= self::$current->display();
 
     return $html;
   }
 
   public function __construct($url, $db)
   {
-    $this->url = $url;
-    $this->db  = $db;
+    self::$url = $url;
+    self::$db  = $db;
 
     foreach (scandir(Settings::$root . "pages") as $f)
     {
@@ -85,6 +92,11 @@ class Page
       if ($p instanceof Frame)
       {
         self::$pages[] = $p;
+
+        if ($p->getUrl() === self::$url[0])
+        {
+          self::$current = $p;
+        }
       }
     }
   }

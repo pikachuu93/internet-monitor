@@ -7,6 +7,8 @@ class Ajax extends Frame
 
   function display()
   {
+    global $db;
+
     if (!($_POST["start"] && $_POST["end"]))
     {
       die();
