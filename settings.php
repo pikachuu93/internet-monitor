@@ -3,7 +3,7 @@
 class Settings
 {
   public static $root          = "/var/www/html/";
-  public static $dbPath        = "/home/pi/connectivity.sqlite";
+  public static $dbPath        = "/home/pi/internet-monitor/connectivity.sqlite";
 
   /* Need speed test script from https://github.com/sivel/speedtest-cli */
   public static $haveSpeedTest = true;
