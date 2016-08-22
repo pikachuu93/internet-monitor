@@ -41,6 +41,10 @@ class EventServer
     {
       $this->outFile = $test;
       $this->inFile  = $this->startSpeedTest();
+      register_shutdown_function(function()
+      {
+        pclose($this->inFile);
+      });
     }
     else
     {
@@ -84,7 +88,7 @@ class EventServer
       flush();
     }
 
-    echo "event: finish\n\n";
+    echo "event: finish\ndata: none\n\n";
 
     if ($this->outFile)
     {

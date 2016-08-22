@@ -4,6 +4,8 @@ function startEvents()
 
   var p = document.getElementById("event-output");
 
+  p.innerHTML = "";
+
   events.onmessage = function(e)
   {
     var c = JSON.parse(e.data);
