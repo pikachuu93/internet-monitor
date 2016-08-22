@@ -4,7 +4,7 @@ class DbConnection extends SQLite3
 {
   public function __construct()
   {
-    $this->open("/home/pi/connectivity.sqlite", SQLITE3_OPEN_READONLY);
+    $this->open(Settings::$dbPath, SQLITE3_OPEN_READONLY);
   }
 
   public function select($cols)

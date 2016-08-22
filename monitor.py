@@ -9,7 +9,7 @@ class Monitor():
     self.retrys  = 3
     self.timeout = 5
     self.address = "8.8.8.8"
-    self.path    = "/home/pi/"
+    self.path    = "/home/pi/internet-monitor/"
     self.dbName  = "connectivity.sqlite"
 
     self.parseArgs(args)
