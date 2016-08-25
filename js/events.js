@@ -1,6 +1,6 @@
 function startEvents()
 {
-  events = new EventSource("http://192.168.0.49/speed-test/events");
+  events = new EventSource("/speed-test/events");
 
   var p = document.getElementById("event-output");
 

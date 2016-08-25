@@ -35,6 +35,11 @@ class EventServer
 
   function __construct()
   {
+    if (!(Settings::$speedTest && is_executable(Settings::$speedTest)))
+    {
+      $this->outputError();
+    }
+
     $test = $this->getLockFile();
 
     if ($test)
@@ -52,6 +57,20 @@ class EventServer
     }
 
     $this->sendEvents();
+  }
+
+  private function outputError()
+  {
+    header("Content-Type: text/event-stream\n\n");
+
+    echo "data: \"=== ERROR ===\\n\"\n\n";
+    echo "data: \"No speed test executable set or\\n\"\n\n";
+    echo "data: \"specified file not executable.\\n\"\n\n";
+    echo "data: \"\"";
+    echo "\n\n";
+    echo "event: finish\ndata: none\n\n";
+
+    die();
   }
 
   private function getLockFile()
