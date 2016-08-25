@@ -1,7 +1,7 @@
 <?php
 /* Only works if we have speedtest script, see settings.php */
 
-if (!Settings::$haveSpeedTest)
+if (!Settings::$speedTest)
 {
   return;
 }
@@ -35,9 +35,11 @@ class EventServer
 
   function __construct()
   {
+    header("Content-Type: text/event-stream\n\n");
+
     if (!(Settings::$speedTest && is_executable(Settings::$speedTest)))
     {
-      $this->outputError();
+      $this->outputError("Speed test not installed on server.");
     }
 
     $test = $this->getLockFile();
@@ -59,14 +61,12 @@ class EventServer
     $this->sendEvents();
   }
 
-  private function outputError()
+  private function outputError($message = "")
   {
-    header("Content-Type: text/event-stream\n\n");
-
     echo "data: \"=== ERROR ===\\n\"\n\n";
-    echo "data: \"No speed test executable set or\\n\"\n\n";
-    echo "data: \"specified file not executable.\\n\"\n\n";
-    echo "data: \"\"";
+    echo "data: \"Woops, something went wrong!\\n\"\n\n";
+    echo "data: \"$message\"\n\n";
+    echo "data: \"\\n\"";
     echo "\n\n";
     echo "event: finish\ndata: none\n\n";
 
@@ -90,7 +90,10 @@ class EventServer
 
   private function sendEvents()
   {
-    header("Content-Type: text/event-stream\n\n");
+    if (!is_resource($this->inFile))
+    {
+      $this->outputError();
+    }
 
     while (!feof($this->inFile))
     {
@@ -103,7 +106,6 @@ class EventServer
 
       echo "data: " . json_encode($c) . "\n\n";
 
-      ob_end_flush();
       flush();
     }
 
@@ -111,7 +113,15 @@ class EventServer
 
     if ($this->outFile)
     {
-      unlink(Settings::$lockFile);
+      if (Settings::$speedTestArchive)
+      {
+        rename(Settings::$lockFile,
+               Settings::$speedTestArchive);
+      }
+      else
+      {
+        unlink(Settings::$lockFile);
+      }
     }
 
     die();

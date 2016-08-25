@@ -6,9 +6,9 @@ class Settings
   public static $dbPath        = "/home/pi/internet-monitor/connectivity.sqlite";
 
   /* Need speed test script from https://github.com/sivel/speedtest-cli */
-  public static $haveSpeedTest = true;
   public static $lockFile      = "/var/www/html/speed-test.lock";
-  public static $speedTest     = "/var/www/html/speedtest_cli.py";
+  public static $speedTest     = "/home/pi/speedtest-cli.py";
+  public static $speedTestArchive = "/home/pi/speed-tests/";
 }
 
 ?>
