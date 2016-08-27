@@ -11,6 +11,7 @@ class Monitor():
     self.address = "8.8.8.8"
     self.path    = "/home/pi/internet-monitor/"
     self.dbName  = "connectivity.sqlite"
+    self.errFile = "/home/pi/monitor-errors.txt"
 
     self.parseArgs(args)
 
@@ -35,7 +36,6 @@ class Monitor():
       c.execute("CREATE TABLE connected (datetime INTEGER PRIMARY KEY, value INTEGER);")
 
     self.connection.commit()
-    
 
   def run(self):
     while True:
@@ -60,8 +60,8 @@ class Monitor():
     c = self.connection.cursor()
 
     c.execute("INSERT INTO connected (datetime, value) VALUES ("
-                        + str(int(time.mktime(self.now.timetuple())))
-                        + ", " + str(int(res)) + ");")
+            + str(int(time.mktime(self.now.timetuple())))
+            + ", " + str(int(res)) + ");")
 
     self.connection.commit()
 

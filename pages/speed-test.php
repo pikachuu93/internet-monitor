@@ -50,7 +50,15 @@ class EventServer
       $this->inFile  = $this->startSpeedTest();
       register_shutdown_function(function()
       {
-        pclose($this->inFile);
+        if ($this->inFile)
+        {
+          pclose($this->inFile);
+        }
+
+        if ($this->outFile)
+        {
+          $this->closeLockFile();
+        }
       });
     }
     else
@@ -75,7 +83,23 @@ class EventServer
 
   private function getLockFile()
   {
-    return fopen(Settings::$lockFile, "x");
+    return @fopen(Settings::$lockFile, "x");
+  }
+
+  private function closeLockFile()
+  {
+    fclose($this->outFile);
+
+    if (Settings::$speedTestArchive)
+    {
+      $newName = date("Y-m-d-H-m-s") . ".txt";
+      rename(Settings::$lockFile,
+             Settings::$speedTestArchive . $newName);
+    }
+    else
+    {
+      unlink(Settings::$lockFile);
+    }
   }
 
   private function openReadOnly()
@@ -113,15 +137,10 @@ class EventServer
 
     if ($this->outFile)
     {
-      if (Settings::$speedTestArchive)
-      {
-        rename(Settings::$lockFile,
-               Settings::$speedTestArchive);
-      }
-      else
-      {
-        unlink(Settings::$lockFile);
-      }
+      $this->closeLockFile();
+
+      pclose($this->inFile);
+      $this->inFile = false;
     }
 
     die();

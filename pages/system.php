@@ -7,13 +7,11 @@ class System extends Frame
 
   public function load()
   {
-    $temp = `cat /sys/class/thermal/thermal_zone0/temp`;
+    $cmds = [(`cat /sys/class/thermal/thermal_zone0/temp` / 1000) . "&deg;C",
+             `df -h /`,
+             `ps -ef | grep python`];
 
-    $html = "Temp: \t\t" . ($temp / 1000) . "&deg;C";
-
-    $df = `df -h /`;
-
-    $html .= "\n\n$df";
+    $html = implode("\n\n", $cmds);
 
     Page::addBody("<pre>$html</pre>");
   }
