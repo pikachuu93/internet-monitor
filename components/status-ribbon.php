@@ -13,7 +13,7 @@ class StatusRibon
   {
     $text = "Internet ";
 
-    if ($this->data[1] === 1)
+    if ($this->connected)
     {
       $colour = "green";
     }
@@ -38,6 +38,15 @@ class StatusRibon
   
     $res = $db->select(["max(datetime)", "value"])->from("connected")->limit(1)->run();
     $this->data = $res->fetchArray();
+
+    if ($this->data[1])
+    {
+      $this->connected = true;
+    }
+    else
+    {
+      $this->connected = false;
+    }
   }
 }
 

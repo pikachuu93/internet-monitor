@@ -46,9 +46,9 @@ class Page
     $html = "<div id='top-bar'><div class='";
     $html .= "status-marker' style='background:";
 
-    $data = getConnectionStatus();
+    $connected = getConnectionStatus()[0];
 
-    if ($data[0])
+    if ($connected)
     {
       $html .= "green";
     }
@@ -74,7 +74,16 @@ class Page
       }
     }
 
-    $html .= "</ul></nav></div>";
+    $html .= "</ul></nav>";
+      
+      
+    if (!$connected)
+    {
+      $html .= "<a href='http://192.168.0.1/self_heal.cgi' "
+             . "class='fix-me' target='_blank'>reconnect</a>";
+    }
+
+    $html .= "</div>";
 
     return $html;
   }

@@ -34,13 +34,13 @@ body
   float: left;
 }
 
-#top-bar li
+#top-bar nav li
 {
   margin: 0;
   padding: 0;
 }
 
-#top-bar li a
+#top-bar nav li a
 {
   display: block;
   height: 29px;
@@ -56,18 +56,18 @@ body
   color: black;
 }
 
-#top-bar li a.selected
+#top-bar nav li a.selected
 {
   background: #EEE;
   border-bottom: 1px solid #EEE;
 }
 
-#top-bar li a:hover
+#top-bar nav li a:hover
 {
   background: #BBB;
 }
 
-#top-bar li a.selected:hover
+#top-bar nav li a.selected:hover
 {
   background: #EEE;
 }
@@ -79,6 +79,25 @@ body
   margin: 6px;
   border-radius: 10px;
   float: left;
+}
+
+#top-bar .fix-me
+{
+  display: block;
+  float: right;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid black;
+  padding: 3px;
+  margin: 3px 20px 0 0;
+  color: black;
+  background: #AAA;
+  text-decoration: none;
+}
+
+#top-bar .fix-me:hover
+{
+  background: #BBB;
 }
 
 #graph-container
