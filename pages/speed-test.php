@@ -21,8 +21,8 @@ class SpeedTest extends Frame
 
     global $db;
 
-    $div = "<button onclick='startEvents();'>Start Test</button>"
-         . "<pre id='event-output'></pre>'";
+    $div = "<button onclick='startEvents();' id='speed-test-button'>"
+         . "Start Test</button><pre id='event-output'></pre>'";
 
     Page::addBody($div);
   }
@@ -35,7 +35,10 @@ class EventServer
 
   function __construct()
   {
-    header("Content-Type: text/event-stream\n\n");
+    header("Content-Type: text/event-stream");
+    header('Cache-Control: no-cache');
+    ob_end_clean();
+    set_time_limit(-1);
 
     if (!(Settings::$speedTest && is_executable(Settings::$speedTest)))
     {
@@ -48,6 +51,17 @@ class EventServer
     {
       $this->outFile = $test;
       $this->inFile  = $this->startSpeedTest();
+
+      if (is_resource($this->inFile))
+      {
+        echo "data: \"=== Speed test started. ===\\n\"";
+        echo "\n\n";
+      }
+      else
+      {
+        $this->outputError("Failed to start speed test.");
+      }
+
       register_shutdown_function(function()
       {
         if ($this->inFile)
@@ -88,17 +102,23 @@ class EventServer
 
   private function closeLockFile()
   {
-    fclose($this->outFile);
-
-    if (Settings::$speedTestArchive)
+    if (is_resource($this->outFile))
     {
-      $newName = date("Y-m-d-H-m-s") . ".txt";
-      rename(Settings::$lockFile,
-             Settings::$speedTestArchive . $newName);
+      fclose($this->outFile);
     }
-    else
+
+    if (file_exists(Settings::$lockFile))
     {
-      unlink(Settings::$lockFile);
+      if (Settings::$speedTestArchive)
+      {
+        $newName = date("Y-m-d-H-M-s") . ".txt";
+        rename(Settings::$lockFile,
+               Settings::$speedTestArchive . $newName);
+      }
+      else
+      {
+        unlink(Settings::$lockFile);
+      }
     }
   }
 
@@ -119,7 +139,8 @@ class EventServer
       $this->outputError();
     }
 
-    while (!feof($this->inFile))
+    while (!feof($this->inFile)
+        || (!$this->outFile && file_exists(Settings::$lockFile)))
     {
       $c = fgetc($this->inFile);
 
