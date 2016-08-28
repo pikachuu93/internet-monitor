@@ -1,5 +1,10 @@
 function startEvents()
 {
+  if (typeof events !== "undefined")
+  {
+    events.close();
+  }
+
   events = new EventSource("/speed-test/events");
 
   var p = document.getElementById("event-output");

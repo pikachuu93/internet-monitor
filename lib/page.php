@@ -79,7 +79,7 @@ class Page
       
     if (!$connected)
     {
-      $html .= "<a href='http://192.168.0.1/self_heal.cgi' "
+      $html .= "<a href='http://192.168.0.1/sky_self_heal.cgi' "
              . "class='fix-me' target='_blank'>reconnect</a>";
     }
 

@@ -41,7 +41,7 @@ class Ajax extends Frame
 
         $m--;
 
-        echo "[\"Date($y,$m,$d,$h,$M,$s)\"," . $r[0] . "]";
+        echo "[\"Date($y,$m,$d,$h,$M,$s)\"," . (60 - $r[0]) . "]";
       }
 
       echo "]";
@@ -69,7 +69,7 @@ class Ajax extends Frame
 
           $m--;
 
-          echo "[\"Date($y, $m, $d)\"," . $r[0] . "]";
+          echo "[\"Date($y, $m, $d)\"," . (1440 - $r[0]) . "]";
         }
         while (($r = $res->fetchArray()) && print(","));
       }

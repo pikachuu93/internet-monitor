@@ -37,8 +37,10 @@ class EventServer
   {
     header("Content-Type: text/event-stream");
     header('Cache-Control: no-cache');
+
     ob_end_clean();
-    set_time_limit(-1);
+    set_time_limit(0);
+    ignore_user_abort(true);
 
     if (!(Settings::$speedTest && is_executable(Settings::$speedTest)))
     {
@@ -111,7 +113,7 @@ class EventServer
     {
       if (Settings::$speedTestArchive)
       {
-        $newName = date("Y-m-d-H-M-s") . ".txt";
+        $newName = date("Y-m-d-H-i-s") . ".txt";
         rename(Settings::$lockFile,
                Settings::$speedTestArchive . $newName);
       }

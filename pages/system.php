@@ -7,9 +7,9 @@ class System extends Frame
 
   public function load()
   {
-    $cmds = [(`cat /sys/class/thermal/thermal_zone0/temp` / 1000) . "&deg;C",
+    $cmds = [(`cat /sys/class/thermal/thermal_zone0/temp` / 1000) . "&deg;C\n",
              `df -h /`,
-             `ps -ef | grep python`];
+             `ps -ef | grep python | grep -v grep`];
 
     $html = implode("\n\n", $cmds);
 
