@@ -1,6 +1,3 @@
-
-google.charts.load("current", {packages: ["corechart"]});
-
 function doAjax(el)
 {
 
@@ -14,40 +11,46 @@ function doAjax(el)
 
 function updateGraph(e)
 {
-  if (!xhttp.responseText)
+  if (xhttp.readyState !== 4)
   {
     return;
   }
 
-  var data = new google.visualization.arrayToDataTable(JSON.parse(xhttp.responseText));
+  var ctx = document.getElementById("graph-container");
 
-  //data.addColumn("number", "Downtime");
-  //data.addColumn("date", "Date");
-  //data.addColumn({type: "string", role: "tooltip", p: {html: true}});
+  ctx.width = ctx.clientWidth;
 
-  //data.addRows(JSON.parse(xhttp.responseText));
+  var res = JSON.parse(xhttp.responseText);
 
-  var options =
-  {
-    title: "Internet Downtime",
-    hAxis: {title: "Date"},
-    vAxis: {title: "Downtime (mins)", minValue: 0},
-    pointSize: 5,
-    tooltip: {isHtml: true},
-    backgroundColor: "#EEE",
-    //trendlines: {
-    //  0: {
-    //    type: 'linear',
-    //    color: 'green',
-    //    lineWidth: 3,
-    //    opacity: 0.3,
-    //    showR2: true,
-    //    visibleInLegend: true
-    //  }
-    //}
-  };
-  
-  var chart = new google.visualization.LineChart(document.getElementById("graph-container"));
-  
-  chart.draw(data, options);
+  Chart.defaults.global.defaultFontColor = "#000";
+
+  var chartInstance = new Chart(
+    ctx,
+    {
+      type: 'line',
+      data:
+      {
+        datasets: [
+        {
+          data: res,
+          label: "minutes",
+          borderColor: "#77A",
+          backgroundColor: "rgba(136, 136, 170, 0.4)",
+          lineTension: 0
+        }],
+      },
+      options:
+      {
+        responsive: false,
+        scales:
+        {
+          xAxes: [
+          {
+            type: "linear",
+            position: "bottom",
+            ticks: {callback: function(value){return new Date(value * 1000).toLocaleString();}}
+          }]
+        }
+      }
+    });
 }

@@ -13,13 +13,13 @@ class History extends Frame
       die();
     }
 
-    Page::addHead("<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>");
+    Page::addHead("<script type='text/javascript' src='js/lib/chart.bundle.min.js'></script>");
     Page::addHead("<script type='text/javascript' src='js/graph.js'></script>");
 
     global $db;
 
     $div = "<div>" . new DateRangePicker()
-         . "<div id='graph-container' style='height:400px;background:#EEE;'></div></div>";
+         . "<canvas id='graph-container' style='height:800px;width:100%;background:#EEE;' height='600'></canvas></div>";
 
     Page::addBody($div);
   }
@@ -54,21 +54,6 @@ class Ajax
                 ->groupBy("date")
                 ->orderBy("datetime ASC")
                 ->run();
-
-      echo '[[{"type":"datetime","label":"Date"},{"type":"number","label":"Value"}]';
-
-
-      while ($r = $res->fetchArray())
-      {
-        echo ",";
-        list($y, $m, $d, $h, $M, $s) = split("-", $r[2]);
-
-        $m--;
-
-        echo "[\"Date($y,$m,$d,$h,$M,$s)\"," . (60 - $r[0]) . "]";
-      }
-
-      echo "]";
     }
     else
     {
@@ -80,26 +65,16 @@ class Ajax
                 ->groupBy("date")
                 ->orderBy("datetime ASC")
                 ->run();
-
-      echo '[[{"type":"date","label":"Date"},{"type":"number","label":"Value"}]';
-
-      if ($r = $res->fetchArray())
-      {
-        echo ",";
-
-        do
-        {
-          list($y, $m, $d) = split("-", $r[2]);
-
-          $m--;
-
-          echo "[\"Date($y, $m, $d)\"," . (1440 - $r[0]) . "]";
-        }
-        while (($r = $res->fetchArray()) && print(","));
-      }
-
-      echo "]";
     }
+
+    $data   = [];
+
+    while ($r = $res->fetchArray())
+    {
+      $data[]   = ["x" => $r[1], "y" => $r[0]];
+    }
+
+      echo json_encode($data);
 
     die();
   }
