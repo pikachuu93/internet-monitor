@@ -8,7 +8,7 @@ function doAjax(el)
 
   xhttp.onreadystatechange = updateGraph;
 
-  xhttp.open("POST", "ajax", true);
+  xhttp.open("POST", "history/ajax", true);
   xhttp.send(new FormData(el));
 }
 
