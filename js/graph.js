@@ -24,6 +24,11 @@ function updateGraph(e)
 
   Chart.defaults.global.defaultFontColor = "#000";
 
+  var timeFormat = function(value)
+  {
+    return new Date(value * 1000).toLocaleString();
+  };
+
   var chartInstance = new Chart(
     ctx,
     {
@@ -32,11 +37,11 @@ function updateGraph(e)
       {
         datasets: [
         {
-          data: res,
-          label: "minutes",
-          borderColor: "#77A",
+          data:            res,
+          label:           "minutes",
+          borderColor:     "#77A",
           backgroundColor: "rgba(136, 136, 170, 0.4)",
-          lineTension: 0
+          lineTension:     0
         }],
       },
       options:
@@ -46,9 +51,14 @@ function updateGraph(e)
         {
           xAxes: [
           {
-            type: "linear",
+            type:     "linear",
             position: "bottom",
-            ticks: {callback: function(value){return new Date(value * 1000).toLocaleString();}}
+            ticks:
+            {
+              callback: timeFormat,
+              min:      res[0].x,
+              max:      res.slice(-1)[0].x
+            }
           }]
         }
       }
