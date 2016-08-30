@@ -29,7 +29,12 @@ function updateGraph(e)
     return new Date(value * 1000).toLocaleString();
   };
 
-  var chartInstance = new Chart(
+  if (typeof chartInstance !== "undefined")
+  {
+    chartInstance.destroy();
+  }
+
+  chartInstance = new Chart(
     ctx,
     {
       type: 'line',

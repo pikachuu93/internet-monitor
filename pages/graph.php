@@ -46,6 +46,8 @@ class Ajax
       list($y, $m, $d) = explode("-", $start);
       $d++;
 
+      $divider = 60;
+
       $res = $db->select(["sum(value)",
                           "datetime",
                           "strftime('%Y-%m-%d-%H-00-00', datetime, 'unixepoch') as date"])
@@ -57,6 +59,8 @@ class Ajax
     }
     else
     {
+      $divider = 1440;
+
       $res = $db->select(["sum(value)",
                           "datetime",
                           "date(datetime, 'unixepoch') as date"])
@@ -71,7 +75,7 @@ class Ajax
 
     while ($r = $res->fetchArray())
     {
-      $data[]   = ["x" => $r[1], "y" => $r[0]];
+      $data[]   = ["x" => $r[1], "y" => 100 * $r[0] / $divider];
     }
 
       echo json_encode($data);
