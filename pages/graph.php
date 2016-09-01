@@ -51,7 +51,9 @@ class History extends Frame
     if ($start === $end)
     {
       list($y, $m, $d) = explode("-", $start);
-      $d++;
+
+      $startTime = mktime(0,  0, 0, $m, $d, $y);
+      $endTime   = mktime(24, 0, 0, $m, $d, $y);
 
       $divider = 60;
 
@@ -59,20 +61,26 @@ class History extends Frame
                           "datetime",
                           "strftime('%Y-%m-%d-%H-00-00', datetime, 'unixepoch') as date"])
                 ->from("connected")
-                ->where("date >= '$start' AND date < '$y-$m-$d'")
+                ->where("datetime >= $startTime AND datetime < $endTime")
                 ->groupBy("date")
                 ->orderBy("datetime ASC")
                 ->run();
     }
     else
     {
+      list($y, $m, $d) = explode("-", $start);
+      $startTime = mktime(0, 0, 0, $m, $d, $y);
+
+      list($y, $m, $d) = explode("-", $end);
+      $endTime   = mktime(24, 0, 0, $m, $d, $y);
+
       $divider = 1440;
 
       $res = $db->select(["sum(value)",
                           "datetime",
                           "date(datetime, 'unixepoch') as date"])
                 ->from("connected")
-                ->where("date >= '$start' AND date <= '$end'")
+                ->where("datetime >= $startTime AND datetime <= $endTime")
                 ->groupBy("date")
                 ->orderBy("datetime ASC")
                 ->run();
