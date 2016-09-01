@@ -34,6 +34,7 @@ class Monitor():
     if not exists:
       print("Creating table")
       c.execute("CREATE TABLE connected (datetime INTEGER PRIMARY KEY, value INTEGER);")
+      c.execute("CREATE INDEX connected_value ON connected (value);")
 
     self.connection.commit()
 
