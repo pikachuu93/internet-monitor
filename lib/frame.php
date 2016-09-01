@@ -5,6 +5,7 @@ class Frame
    protected $name;
    protected $menuItem = true;
    protected $url;
+   protected $priority = 0;
 
   public function getName()
   {
@@ -19,6 +20,11 @@ class Frame
   public function getUrl()
   {
     return $this->url;
+  }
+
+  public function getPriority()
+  {
+    return $this->priority;
   }
 
   public function load()

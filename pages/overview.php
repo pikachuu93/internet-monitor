@@ -2,8 +2,9 @@
 
 class Overview extends Frame
 {
-  protected $name = "Overview";
-  protected $url  = "overview";
+  protected $name     = "Overview";
+  protected $url      = "overview";
+  protected $priority = 4;
 
   public function load()
   {

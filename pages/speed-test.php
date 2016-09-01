@@ -8,8 +8,9 @@ if (!Settings::$speedTest)
 
 class SpeedTest extends Frame
 {
-  protected $name = "Speed Test";
-  protected $url  = "speed-test";
+  protected $name     = "Speed Test";
+  protected $url      = "speed-test";
+  protected $priority = 1;
 
   public function load()
   {

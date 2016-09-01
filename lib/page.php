@@ -91,7 +91,7 @@ class Page
   public function loadDefault()
   {
     # This is super buggy!!!
-    self::$current = self::$pages[1];
+    self::$current = self::$pages[0];
   }
 
   public function __construct($url, $db)
@@ -118,6 +118,8 @@ class Page
         }
       }
     }
+
+    usort(self::$pages, function($a, $b){$v = $b->getPriority() - $a->getPriority(); return ($v > 0) - ($v < 0);});
 
     if (self::$current === Null)
     {

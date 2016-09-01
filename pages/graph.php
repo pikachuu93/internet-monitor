@@ -2,8 +2,9 @@
 
 class History extends Frame
 {
-  protected $name = "History";
-  protected $url  = "history";
+  protected $name    = "History";
+  protected $url     = "history";
+  protected $priority = 3;
 
   function load()
   {
