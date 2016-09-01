@@ -9,7 +9,8 @@ class System extends Frame
   {
     $cmds = [(`cat /sys/class/thermal/thermal_zone0/temp` / 1000) . "&deg;C\n",
              `df -h /`,
-             `ps -ef | grep python | grep -v grep`];
+             `ps -ef | grep python | grep -v grep`,
+             file("/proc/meminfo")[1]];
 
     $html = implode("\n\n", $cmds);
 

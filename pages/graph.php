@@ -9,8 +9,7 @@ class History extends Frame
   {
     if (isset(Page::$url[1]) && Page::$url[1] === "ajax")
     {
-      new Ajax;
-      die();
+      $this->doAjax();
     }
 
     Page::addHead("<script type='text/javascript' src='js/lib/chart.bundle.min.js'></script>");
@@ -19,27 +18,33 @@ class History extends Frame
     global $db;
 
     $div = "<div>" . new DateRangePicker()
-         . "<canvas id='graph-container' style='height:800px;width:100%;background:#EEE;' height='600'></canvas></div>";
+         . "<canvas id='graph-container' "
+         . "style='height:800px;width:100%;background:#EEE;' "
+         . "height='600'></canvas></div>";
+
+    $div .= "<script>"
+          . "window.onload = function(){"
+          . "loadGraph("
+          . json_encode($this->getData(date("Y-m-d")))
+          . ");};</script>";
+          
 
     Page::addBody($div);
   }
-}
 
-return new History;
+  function doAjax()
+  {
+    die(json_encode($this->getData($_POST["start"], $_POST["end"])));
+  }
 
-class Ajax
-{
-  function __construct()
+  function getData($start, $end = null)
   {
     global $db;
 
-    if (!($_POST["start"] && $_POST["end"]))
+    if ($end === null)
     {
-      die();
+      $end = $start;
     }
-
-    $start = $_POST["start"];
-    $end   = $_POST["end"];
 
     if ($start === $end)
     {
@@ -78,10 +83,10 @@ class Ajax
       $data[]   = ["x" => $r[1], "y" => 100 * $r[0] / $divider];
     }
 
-      echo json_encode($data);
-
-    die();
+    return $data;
   }
 }
+
+return new History;
 
 ?>

@@ -9,9 +9,9 @@ function doAjax(el)
   xhttp.send(new FormData(el));
 }
 
-function updateGraph(e)
+function loadGraph(data)
 {
-  if (xhttp.readyState !== 4)
+  if (!data)
   {
     return;
   }
@@ -19,10 +19,6 @@ function updateGraph(e)
   var ctx = document.getElementById("graph-container");
 
   ctx.width = ctx.clientWidth;
-
-  var res = JSON.parse(xhttp.responseText);
-
-  Chart.defaults.global.defaultFontColor = "#000";
 
   var timeFormat = function(value)
   {
@@ -42,7 +38,7 @@ function updateGraph(e)
       {
         datasets: [
         {
-          data:            res,
+          data:            data,
           label:           "minutes",
           borderColor:     "#77A",
           backgroundColor: "rgba(136, 136, 170, 0.4)",
@@ -61,11 +57,25 @@ function updateGraph(e)
             ticks:
             {
               callback: timeFormat,
-              min:      res[0].x,
-              max:      res.slice(-1)[0].x
+              min:      data[0].x,
+              max:      data.slice(-1)[0].x
             }
           }]
         }
       }
     });
+}
+
+function updateGraph(e)
+{
+  if (xhttp.readyState !== 4)
+  {
+    return;
+  }
+
+  var res = JSON.parse(xhttp.responseText);
+
+  Chart.defaults.global.defaultFontColor = "#000";
+
+  loadGraph(res);
 }
