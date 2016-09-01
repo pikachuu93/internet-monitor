@@ -18,6 +18,5 @@ function loadDir($dir)
 }
 
 loadDir("lib");
-loadDir("components");
 
 ?>

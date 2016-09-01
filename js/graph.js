@@ -39,7 +39,7 @@ function loadGraph(data)
         datasets: [
         {
           data:            data,
-          label:           "minutes",
+          label:           "percent",
           borderColor:     "#77A",
           backgroundColor: "rgba(136, 136, 170, 0.4)",
           lineTension:     0

@@ -17,18 +17,20 @@ class History extends Frame
 
     global $db;
 
-    $div = "<div>" . new DateRangePicker()
+    $max = date("Y-m-d");
+
+    $div = "<div><form method='post' onchange='doAjax(this)'>"
+         . "<label>Start:<input type='date' name='start' min='2016-07-16' max='$max'/></label>"
+         . "<label>End:<input type='date' name='end' min='2016-07-16' max='$max' value='$max'/></label>"
+         . "</form>"
          . "<canvas id='graph-container' "
          . "style='height:800px;width:100%;background:#EEE;' "
-         . "height='600'></canvas></div>";
-
-    $div .= "<script>"
-          . "window.onload = function(){"
-          . "loadGraph("
-          . json_encode($this->getData(date("Y-m-d")))
-          . ");};</script>";
+         . "height='600'></canvas></div><script>"
+         . "window.onload = function(){"
+         . "loadGraph("
+         . json_encode($this->getData(date("Y-m-d")))
+         . ");};</script>";
           
-
     Page::addBody($div);
   }
 
