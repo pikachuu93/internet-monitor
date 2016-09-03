@@ -75,7 +75,5 @@ function updateGraph(e)
 
   var res = JSON.parse(xhttp.responseText);
 
-  Chart.defaults.global.defaultFontColor = "#000";
-
   loadGraph(res);
 }

@@ -130,3 +130,14 @@ pre
   font-family: Consolas, monaco, monospace;
   overflow: auto;
 }
+
+table
+{
+  margin-top: 50px;
+  margin-left: 50px;
+}
+
+td
+{
+  padding: 10px 50px 10px;
+}
