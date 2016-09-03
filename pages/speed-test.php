@@ -24,7 +24,7 @@ class SpeedTest extends Frame
     $div = "<button onclick='startEvents();' id='speed-test-button'>"
          . "Start Test</button><pre id='event-output'></pre>'";
 
-    Page::addHead("<script src='js/events.js'></script>");
+    Page::addHead("<script src='js/speed-test.js'></script>");
     Page::addBody($div);
   }
 }
