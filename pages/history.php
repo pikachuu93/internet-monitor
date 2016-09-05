@@ -14,7 +14,7 @@ class History extends Frame
     }
 
     Page::addHead("<script type='text/javascript' src='js/lib/chart.bundle.min.js'></script>");
-    Page::addHead("<script type='text/javascript' src='js/graph.js'></script>");
+    Page::addHead("<script type='text/javascript' src='js/history.js'></script>");
 
     global $db;
 
