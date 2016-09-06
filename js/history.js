@@ -42,7 +42,7 @@ function loadGraph(data)
           label:           "percent",
           borderColor:     "#77A",
           backgroundColor: "rgba(136, 136, 170, 0.4)",
-          lineTension:     0
+          lineTension:     0.2
         }],
       },
       options:

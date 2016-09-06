@@ -57,6 +57,7 @@ class History extends Frame
       $endTime   = mktime(24, 0, 0, $m, $d, $y);
 
       $divider = 60;
+      $last    = date("i");
 
       $res = $db->select(["sum(value)",
                           "datetime",
@@ -76,6 +77,7 @@ class History extends Frame
       $endTime   = mktime(24, 0, 0, $m, $d, $y);
 
       $divider = 1440;
+      $last    = 60 * date("G") + date("i");
 
       $res = $db->select(["sum(value)",
                           "datetime",
@@ -93,6 +95,10 @@ class History extends Frame
     {
       $data[]   = ["x" => $r[1], "y" => 100 * $r[0] / $divider];
     }
+
+    $end       = array_pop($data);
+    $end["y"] *= $divider / $last;
+    $data[]    = $end;
 
     return $data;
   }
