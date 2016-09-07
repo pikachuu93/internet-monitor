@@ -1,17 +1,26 @@
-function startEvents()
+var speedTest = null;
+
+function startEvents(start = false)
 {
-  if (typeof events !== "undefined")
+  if (speedTest !== null)
   {
-    events.close();
+    speedTest.close();
   }
 
-  events = new EventSource("/speed-test/events");
+  if (start)
+  {
+    speedTest = new EventSource("/speed-test/events");
+  }
+  else
+  {
+    speedTest = new EventSource("/speed-test/events/no-start");
+  }
 
   var p = document.getElementById("event-output");
 
   p.innerHTML = "";
 
-  events.onmessage = function(e)
+  speedTest.onmessage = function(e)
   {
     var c = JSON.parse(e.data);
 
@@ -23,9 +32,20 @@ function startEvents()
     p.innerHTML += c;
   };
 
-  events.addEventListener("finish", function(e)
+  speedTest.addEventListener("finish", function(e)
   {
-    p.innerHTML += "--- Speed Test finished, closing event stream ---";
-    events.close();
+    if (start)
+    {
+      p.innerHTML += "--- Speed Test finished, closing event stream ---";
+    }
+    else
+    {
+      p.innerHTML += "--- Speed Test ---";
+    }
+
+    speedTest.close();
+    speedTest = null;
   });
 }
+
+window.onload = function(){startEvents()};
