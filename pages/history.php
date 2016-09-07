@@ -56,8 +56,12 @@ class History extends Frame
       $startTime = mktime(0,  0, 0, $m, $d, $y);
       $endTime   = mktime(24, 0, 0, $m, $d, $y);
 
-      $divider = 60;
-      $last    = date("i");
+      $last = $divider = 60;
+
+      if ($end === date("Y-m-d"))
+      {
+        $last = date("i") + 1;
+      }
 
       $res = $db->select(["sum(value)",
                           "datetime",
@@ -76,8 +80,11 @@ class History extends Frame
       list($y, $m, $d) = explode("-", $end);
       $endTime   = mktime(24, 0, 0, $m, $d, $y);
 
-      $divider = 1440;
-      $last    = 60 * date("G") + date("i");
+      $last = $divider = 1440;
+      if ($end === date("Y-m-d"))
+      {
+        $last    = 60 * date("G") + date("i");
+      }
 
       $res = $db->select(["sum(value)",
                           "datetime",
