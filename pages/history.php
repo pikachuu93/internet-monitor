@@ -26,7 +26,7 @@ class History extends Frame
          . "</form>"
          . "<canvas id='graph-container' "
          . "style='height:800px;width:100%;background:#EEE;' "
-         . "height='600'></canvas></div><script>"
+         . "height='600'></canvas></div><script type='text/javascript'>"
          . "window.onload = function(){"
          . "loadGraph("
          . json_encode($this->getData(date("Y-m-d")))
