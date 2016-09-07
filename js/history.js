@@ -1,6 +1,5 @@
 function doAjax(el)
 {
-
   xhttp = new XMLHttpRequest();
 
   xhttp.onreadystatechange = updateGraph;

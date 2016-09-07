@@ -37,13 +37,15 @@ class Page
   {
     return "<body>"
          . self::outputMenu()
+         . "<div id='content'>"
          . implode("\n", self::$body)
+         . "</div>"
          . "</body>";
   }
 
   public static function outputMenu()
   {
-    $html = "<div id='top-bar'><div class='";
+    $html = "<div id='nav-bar'><div class='";
     $html .= "status-marker' style='background:";
 
     $connected = getConnectionStatus()[0];

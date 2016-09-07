@@ -25,7 +25,7 @@ class History extends Frame
          . "<label>End:<input type='date' name='end' min='2016-07-16' max='$max' value='$max'/></label>"
          . "</form>"
          . "<canvas id='graph-container' "
-         . "style='height:800px;width:100%;background:#EEE;' "
+         . "style='height:800px;width:100%;' "
          . "height='600'></canvas></div><script>"
          . "window.onload = function(){"
          . "loadGraph("
