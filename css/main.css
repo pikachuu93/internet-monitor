@@ -86,9 +86,10 @@ body
   border-radius: 10px;
 }
 
-#nav-bar .fix-me
+#nav-bar li a svg
 {
-  margin-top: 10px;
+  float: right;
+  margin: 12px 20px 12px 0;
 }
 
 #graph-container
@@ -136,7 +137,7 @@ td
   padding: 10px 50px 10px;
 }
 
-@media only screen and (min-device-width: 320px) and (max-device-width: 568px)
+@media (max-device-width: 600px), (max-width: 600px)
 {
   #nav-bar
   {
@@ -160,51 +161,46 @@ td
   #nav-bar ul,
   #nav-bar li
   {
-    padding: 0;
-    margin: 0;
-    display: block;
     float: left;
-  }
-
-  #nav-bar nav li
-  {
-    margin: 0;
-    padding: 0;
+    height: 100px;
+    width: auto;
   }
 
   #nav-bar nav li a,
   #nav-bar .fix-me
   {
-    display: block;
     height: 100px;
-    width: 160px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 30px;
-    color: white;
+    width: 25px;
+    padding: 0 30px;
+    font-size: 0;
 
-    text-align: left;
-    vertical-align: middle;
-    line-height: 100px;
+    border-left: none;
 
-    text-shadow: -3px 3px 3px #555;
+    float: left;
   }
 
   #nav-bar nav li a.selected
   {
-    padding-left: default;
+    padding: 0 30px;
     border-left: none;
     border-bottom: 5px solid blue;
     height: 95px;
+    width: 25px;
   }
 
   #nav-bar nav li a:hover,
   #nav-bar .fix-me:hover
   {
-    padding-left: default;
+    padding: 0 30px;
     border-left: none;
     border-bottom: 5px solid #009;
     height: 95px;
+    width: 25px;
+  }
+
+  #nav-bar nav li svg
+  {
+    margin: 30px 0 0;
   }
 
   .status-marker
@@ -214,10 +210,5 @@ td
     margin: 10px;
     border-radius: 10px;
     float: left;
-  }
-
-  #nav-bar .fix-me
-  {
-    margin-top: 10px;
   }
 }

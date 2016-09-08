@@ -12,6 +12,13 @@ class SpeedTest extends Frame
   protected $url      = "speed-test";
   protected $priority = 1;
 
+  public $svg = <<<svg
+<svg height="25" width="25">
+<circle cx="12.5" cy="12.5" r="10" style="stroke:white;stroke-width:2;" />
+<line x1="12.5" y1="12.5" x2="17" y2="8" style="stroke:white;stroke-width:2;" />
+</svg>
+svg;
+
   public function load()
   {
     if (isset(Page::$url[1]) && Page::$url[1] === "events")

@@ -65,25 +65,33 @@ class Page
     {
       if ($p->hasMenuItem())
       {
-        $html .= "<li><a href='" . $p->getUrl();
+        $html .= "<li>";
+
+        $html .= "<a href='" . $p->getUrl();
 
         if ($p === self::$current)
         {
           $html .= "' class='selected";
         }
 
-        $html .= "'>" . $p->getName() . "</a></li>";
+        $html .= "'>";
+        
+        if (isset($p->svg))
+        {
+          $html .= $p->svg;
+        }
+        
+        $html .= $p->getName() . "</a></li>";
       }
     }
-
-    $html .= "</ul></nav>";
-      
       
     if (!$connected)
     {
       $html .= "<a href='http://192.168.0.1/sky_self_heal.cgi' "
-             . "class='fix-me' target='_blank'>reconnect</a>";
+             . "class='fix-me' target='_blank'>Reconnect</a>";
     }
+
+    $html .= "</ul></nav>";
 
     $html .= "</div>";
 
