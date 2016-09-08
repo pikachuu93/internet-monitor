@@ -21,7 +21,7 @@ class SpeedTest extends Frame
 
     global $db;
 
-    $div = "<button onclick='startEvents();' id='speed-test-button'>"
+    $div = "<button onclick='startEvents(true);' id='speed-test-button'>"
          . "Start Test</button><pre id='event-output'></pre>'";
 
     Page::addHead("<script src='js/speed-test.js'></script>");
@@ -46,6 +46,15 @@ class EventServer
     if (!(Settings::$speedTest && is_executable(Settings::$speedTest)))
     {
       $this->outputError("Speed test not installed on server.");
+    }
+
+    if (isset(Page::$url[2]) && Page::$url[2] === "no-start")
+    {
+      if (!file_exists(Settings::$lockFile))
+      {
+        echo "event: finish\ndata: none\n\n";
+        die();
+      }
     }
 
     $test = $this->getLockFile();
