@@ -14,8 +14,8 @@ class SpeedTest extends Frame
 
   public $svg = <<<svg
 <svg height="25" width="25">
-<circle cx="12.5" cy="12.5" r="10" style="stroke:white;stroke-width:2;" />
-<line x1="12.5" y1="12.5" x2="17" y2="8" style="stroke:white;stroke-width:2;" />
+<circle cx="12.5" cy="12.5" r="10" />
+<line x1="12.5" y1="12.5" x2="17" y2="8" class="highlight" />
 </svg>
 svg;
 

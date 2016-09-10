@@ -8,11 +8,11 @@ class History extends Frame
 
   public $svg = <<<svg
 <svg height="25" width="25">
-<line x1="1" y1="1" x2="1" y2="25" style="stroke:white;stroke-width:2;" />
-<line x1="1" y1="24" x2="24" y2="24" style="stroke:white;stroke-width:2;" />
-<line x1="6" y1="20" x2="10" y2="10" style="stroke:white;stroke-width:2;" />
-<line x1="10" y1="10" x2="15" y2="17" style="stroke:white;stroke-width:2;" />
-<line x1="15" y1="17" x2="22" y2="15" style="stroke:white;stroke-width:2;" />
+<line x1="1" y1="1" x2="1" y2="25" />
+<line x1="1" y1="24" x2="24" y2="24" />
+<line class="highlight" x1="6" y1="20" x2="10" y2="10" />
+<line class="highlight" x1="10" y1="10" x2="15" y2="17" />
+<line class="highlight" x1="15" y1="17" x2="22" y2="15" />
 </svg>
 svg;
 

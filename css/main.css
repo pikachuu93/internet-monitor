@@ -75,6 +75,7 @@ body
 #nav-bar .fix-me:hover
 {
   border-left: 3px solid #009;
+  color: #AAF;
   padding-left: 37px;
 }
 
@@ -135,6 +136,22 @@ table
 td
 {
   padding: 10px 50px 10px;
+}
+
+svg *
+{
+  stroke-width: 2;
+  stroke: white;
+}
+
+#nav-bar a:hover svg *
+{
+  stroke: #AAF;
+}
+
+#nav-bar a:hover svg .highlight
+{
+  stroke: red;
 }
 
 @media (max-device-width: 600px), (max-width: 600px)
