@@ -87,8 +87,19 @@ class Page
       
     if (!$connected)
     {
-      $html .= "<a href='http://192.168.0.1/sky_self_heal.cgi' "
-             . "class='fix-me' target='_blank'>Reconnect</a>";
+      $html .= "<li><a href='http://192.168.0.1/sky_self_heal.cgi' "
+        . "class='fix-me' target='_blank'>";
+      
+      $html .= <<<SVG
+<svg width="25" height="25">
+<path d="M 9 2 L 16 2 L 23 18 L 19 23 L 6 23 L 2 18 L 9 2" />
+<line x1="12.5" y1="6" x2="12.5" y2="11" class="highlight" />
+<line x1="9" y1="14" x2="9" y2="18" class="highlight" />
+<line x1="16" y1="14" x2="16" y2="18" class="highlight" />
+</svg>
+SVG;
+      
+      $html .= "Reconnect</a></li>";
     }
 
     $html .= "</ul></nav>";
