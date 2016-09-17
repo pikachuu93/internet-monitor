@@ -33,6 +33,7 @@ svg;
     $div = "<div><form method='post' onchange='doAjax(this)'>"
          . "<label>Start:<input type='date' name='start' min='2016-07-16' max='$max'/></label>"
          . "<label>End:<input type='date' name='end' min='2016-07-16' max='$max' value='$max'/></label>"
+         . "<label>Speed:<input type='checkbox' name='speed'></label>"
          . "</form>"
          . "<canvas id='graph-container' "
          . "style='height:800px;width:100%;' "
@@ -47,16 +48,25 @@ svg;
 
   function doAjax()
   {
-    die(json_encode($this->getData($_POST["start"], $_POST["end"])));
+    die(json_encode($this->getData($_POST["start"], $_POST["end"], $_POST["speed"])));
   }
 
-  function getData($start, $end = null)
+  function getData($start, $end = null, $speed = false)
   {
     global $db;
+
+    $select = "100 * avg(value)";
+    $table  = "connected";
 
     if ($end === null)
     {
       $end = $start;
+    }
+
+    if ($speed)
+    {
+      $select = "avg(value)";
+      $table  = "speed";
     }
 
     if ($start === $end)
@@ -66,17 +76,10 @@ svg;
       $startTime = mktime(0,  0, 0, $m, $d, $y);
       $endTime   = mktime(24, 0, 0, $m, $d, $y);
 
-      $last = $divider = 60;
-
-      if ($end === date("Y-m-d"))
-      {
-        $last = date("i") + 1;
-      }
-
-      $res = $db->select(["sum(value)",
+      $res = $db->select([$select,
                           "datetime",
                           "strftime('%Y-%m-%d-%H-00-00', datetime, 'unixepoch') as date"])
-                ->from("connected")
+                ->from($table)
                 ->where("datetime >= $startTime AND datetime < $endTime")
                 ->groupBy("date")
                 ->orderBy("datetime ASC")
@@ -90,16 +93,10 @@ svg;
       list($y, $m, $d) = explode("-", $end);
       $endTime   = mktime(24, 0, 0, $m, $d, $y);
 
-      $last = $divider = 1440;
-      if ($end === date("Y-m-d"))
-      {
-        $last    = 60 * date("G") + date("i");
-      }
-
-      $res = $db->select(["sum(value)",
+      $res = $db->select([$select,
                           "datetime",
                           "date(datetime, 'unixepoch') as date"])
-                ->from("connected")
+                ->from($table)
                 ->where("datetime >= $startTime AND datetime <= $endTime")
                 ->groupBy("date")
                 ->orderBy("datetime ASC")
@@ -110,12 +107,8 @@ svg;
 
     while ($r = $res->fetchArray())
     {
-      $data[]   = ["x" => $r[1], "y" => 100 * $r[0] / $divider];
+      $data[]   = ["x" => $r[1], "y" => $r[0]];
     }
-
-    $end       = array_pop($data);
-    $end["y"] *= $divider / $last;
-    $data[]    = $end;
 
     return $data;
   }

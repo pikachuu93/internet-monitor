@@ -10,7 +10,7 @@ class Monitor():
                      "timeout":  5,
                      "address":  "8.8.8.8",
                      "path":     "/home/pi/internet-monitor/",
-                     "database": "foo.sqlite",
+                     "database": "connectivity.sqlite",
                      "errors":   "/home/pi/monitor-errors.txt"}
 
     self.parseArgs()
