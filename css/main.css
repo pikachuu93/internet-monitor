@@ -95,9 +95,9 @@ body
 
 #graph-container
 {
-  height: 75%;
-  margin: 10px;
+  height: 100%;
   background: #EEF;
+  margin-top: 10px;
 }
 
 #speed-test-button
