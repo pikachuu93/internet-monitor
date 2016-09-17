@@ -1,23 +1,23 @@
 #!/usr/bin/python
 
-import subprocess, time, datetime, sys, sqlite3
+import subprocess, time, datetime, sys, sqlite3, argparse
 
 class Monitor():
-  def __init__(self, args = []):
+  def __init__(self):
     # Defaults will be overwritten by parseArgs
-    self.freq    = 60
-    self.retrys  = 3
-    self.timeout = 5
-    self.address = "8.8.8.8"
-    self.path    = "/home/pi/internet-monitor/"
-    self.dbName  = "connectivity.sqlite"
-    self.errFile = "/home/pi/monitor-errors.txt"
+    self.settings = {"freq":     60,
+                     "retrys":   3,
+                     "timeout":  5,
+                     "address":  "8.8.8.8",
+                     "path":     "/home/pi/internet-monitor/",
+                     "database": "connectivity.sqlite",
+                     "errors":   "/home/pi/monitor-errors.txt"}
 
-    self.parseArgs(args)
+    self.parseArgs()
 
     self.now = datetime.datetime.now()
 
-    self.connection = sqlite3.connect(self.path + self.dbName)
+    self.connection = sqlite3.connect(self.settings["path"] + self.settings["database"])
 
     self.setupDatabase()
 
@@ -49,9 +49,11 @@ class Monitor():
       self.sleep()
 
   def checkConnection(self):
-    for i in range(self.retrys):
-      res = subprocess.call(["/bin/ping", "-c1", "-w" + str(self.timeout), self.address],
-                stdout = subprocess.PIPE)
+    for i in range(self.settings["retrys"]):
+      res = subprocess.call(["/bin/ping",
+                             "-c1",
+                             "-w" + str(self.settings["timeout"]), self.settings["address"]],
+                             stdout = subprocess.PIPE)
       if not res:
         return 1
 
@@ -77,7 +79,22 @@ class Monitor():
     if sleep > 0:
       time.sleep(sleep)
 
-  def parseArgs(self, argsIn):
-    args = list(argsIn)
+  def parseArgs(self):
+    parser = argparse.ArgumentParser(description="A command line tool to monitor internet connectivity.")
+
+    parser.add_argument("--address",  "-a", help="The remote address toping.",                      required=False)
+    parser.add_argument("--freq",     "-f", help="How often to check for a connection in seconds.", required=False, type=int)
+    parser.add_argument("--timeout",  "-t", help="The timeout for the connectivity check.",         required=False, type=int)
+    parser.add_argument("--retrys",   "-r", help="The number of retrys if first check fails",       required=False, type=int)
+    parser.add_argument("--database", "-d", help="The database to store restults in.",              required=False)
+    parser.add_argument("--errors",   "-e", help="The file to log any errors in.",                  required=False)
+
+    args = parser.parse_args()
+
+    v = vars(args)
+
+    for arg in v:
+        if v[arg] is not None:
+            self.settings[arg] = v[arg]
 
 m = Monitor()
