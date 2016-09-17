@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import subprocess, time, datetime, sys, sqlite3, argparse
+import subprocess, time, datetime, sys, sqlite3, argparse, re
 
 class Monitor():
   def __init__(self):
@@ -10,7 +10,7 @@ class Monitor():
                      "timeout":  5,
                      "address":  "8.8.8.8",
                      "path":     "/home/pi/internet-monitor/",
-                     "database": "connectivity.sqlite",
+                     "database": "foo.sqlite",
                      "errors":   "/home/pi/monitor-errors.txt"}
 
     self.parseArgs()
@@ -23,48 +23,72 @@ class Monitor():
 
     self.sleep()
 
-    self.run()
-
   def setupDatabase(self):
     c = self.connection.cursor()
 
-    c.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='connected';")
+    c.execute("SELECT count(*) FROM sqlite_master WHERE "
+            + "type='table' AND (name='connected' OR name='speed');")
 
     exists = c.fetchone()[0]
-    if not exists:
-      print("Creating table")
+    if exists is not 2:
+      print("Creating tables...")
       c.execute("CREATE TABLE connected (datetime INTEGER PRIMARY KEY, value INTEGER);")
+      c.execute("CREATE TABLE speed     (datetime INTEGER PRIMARY KEY, value INTEGER);")
       c.execute("CREATE INDEX connected_value ON connected (value);")
+      c.execute("CREATE INDEX speed_value     ON speed     (value);")
 
-    self.connection.commit()
+      self.connection.commit()
+
+      print("Tables created.")
 
   def run(self):
     while True:
       self.now = datetime.datetime.now()
 
-      res = self.checkConnection()
+      self.checkConnection()
 
-      self.saveResult(res)
+      self.saveConnection()
+      self.saveSpeed()
 
       self.sleep()
 
   def checkConnection(self):
     for i in range(self.settings["retrys"]):
-      res = subprocess.call(["/bin/ping",
-                             "-c1",
-                             "-w" + str(self.settings["timeout"]), self.settings["address"]],
-                             stdout = subprocess.PIPE)
+      p = subprocess.Popen(["/bin/ping",
+                            "-c1",
+                            "-w" + str(self.settings["timeout"]),
+                            self.settings["address"]],
+                           stdout = subprocess.PIPE)
+
+      output = p.communicate()
+
+      res = p.returncode
       if not res:
-        return 1
+        self.haveConnection = True
+        self.pingMessage    = output[0]
+        return
 
-    return 0
+    self.haveConnection = False
 
-  def saveResult(self, res):
+  def saveConnection(self):
     c = self.connection.cursor()
 
     c.execute("INSERT INTO connected (datetime, value) VALUES ("
             + str(int(time.mktime(self.now.timetuple())))
-            + ", " + str(int(res)) + ");")
+            + ", " + str(int(self.haveConnection)) + ");")
+
+    self.connection.commit()
+
+  def saveSpeed(self):
+    c = self.connection.cursor()
+
+    m = re.search("time=([0-9]+)", self.pingMessage)
+
+    speed = m.group(1)
+
+    c.execute("INSERT INTO speed (datetime, value) VALUES ("
+            + str(int(time.mktime(self.now.timetuple())))
+            + ", " + speed + ");")
 
     self.connection.commit()
 
@@ -98,3 +122,14 @@ class Monitor():
             self.settings[arg] = v[arg]
 
 m = Monitor()
+
+while True:
+    try:
+        m.run()
+    except KeyboardInterrupt:
+        print("Exiting.")
+        sys.exit()
+    except:
+        f = open(m.settings["errors"], "a")
+        f.write(sys.exc_info()[0])
+        f.close()
