@@ -63,6 +63,11 @@ svg;
       $end = $start;
     }
 
+    if (!$start)
+    {
+      $start = $end;
+    }
+
     if ($speed)
     {
       $select = "avg(value)";
